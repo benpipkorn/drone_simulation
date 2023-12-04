@@ -6,6 +6,7 @@
 #include "IController.h"
 #include "IEntity.h"
 #include "Robot.h"
+#include "Memento.h"
 #include "graph.h"
 #include <deque>
 #include <map>
@@ -71,6 +72,18 @@ class SimulationModel {
   void stop();
 
   /**
+   * @brief Saves the current simulation and stores it in a CSV file
+   * @return Void
+  */
+  void save();
+
+  /**
+   * @brief Restores an old simulation from a CSV file which is stored in the /saves folder
+   * @param m A memento object to load the data from
+  */
+  void restore(Memento& m);
+
+  /**
    * @brief Returns the graph of the map
    *
    * @returns IGraph* graph pointer
@@ -86,6 +99,7 @@ class SimulationModel {
   void removeFromSim(int id);
   const routing::IGraph* graph;
   CompositeFactory entityFactory;
+  std::vector<Memento*> saves;
 };
 
 #endif
