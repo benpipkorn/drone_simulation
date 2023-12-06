@@ -8,12 +8,13 @@ class Memento {
     private:
         std::vector<JsonObject*> objects;
         std::string filePath;
+        std::string fileName;
     public:
         /**
          * @brief Constructor for a Memento object
          * @param filePath The filepath to the CSV file to load from
         */
-        Memento(std::string& path);
+        Memento(std::string& name);
 
         /**
          * @brief Destructor for a Memento object. Deletes the objects vector
@@ -41,5 +42,12 @@ class Memento {
          * @return True if the loading was successful, false if an error occured
         */
         bool loadFromCSV();
+
+        /**
+         * @brief Gets the path atribute from the memento
+         * 
+         * @return A string that contains the file path/name
+        */
+        std::string getName();
         
 };

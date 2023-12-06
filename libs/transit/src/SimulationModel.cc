@@ -121,11 +121,27 @@ void SimulationModel::removeFromSim(int id) {
   }
 }
 
+Memento* SimulationModel::getMemento(std::string name){
+  for(int i=0; i < saves.size(); i++){
+    Memento* m = saves.at(i);
+    std::string path = m->getName();
+    if(path.compare(name) == 0){
+        // Found correct memento
+        return m;
+    }
+  }
+  return NULL;
+}
+
 void SimulationModel::save(){
   std::cout<< "In save function in model" << std::endl;
 }
 
 void SimulationModel::restore(Memento* m){
   std::cout<< "In load function in model" << std::endl;
+  if(m == NULL){
+    std::cout << "Memento not found for file\n";
+    return;
+  }
   m->loadFromCSV();
 }

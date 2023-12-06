@@ -63,8 +63,9 @@ public:
             model.save();
         } else if(cmd == "loadSimulation"){
             std::string name = data["file_name"];
-            Memento* m = new Memento(name);
-            std::cout << "loadSim command administered\n";
+            Memento* m = NULL;
+            m = model.getMemento(name); // Gets the memento from Sim Model, return NULL if memento is not found
+            std::cout << "loadSim command administered for file: " << name << "\n";
             model.restore(m);
         }
     }

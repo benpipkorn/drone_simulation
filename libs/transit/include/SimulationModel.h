@@ -84,6 +84,15 @@ class SimulationModel {
   void restore(Memento* m);
 
   /**
+   * @brief Gets a memento based on the file name given
+   * 
+   * @param name A string that is the file name for the Memento you want
+   * 
+   * @return Returns the Memento associated with given file name, otherwise null if Memento was not found
+  */
+  Memento* getMemento(std::string name);
+
+  /**
    * @brief Returns the graph of the map
    *
    * @returns IGraph* graph pointer
