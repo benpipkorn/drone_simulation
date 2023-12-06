@@ -57,6 +57,13 @@ public:
             std::cout << "Stop command administered\n";
             model.stop();
         }
+        else if(cmd == "saveSimulation"){
+            std::cout << "saveSim command administered\n";
+            model.save();
+        } else if(cmd == "loadSimulation"){
+            std::cout << "loadSim command administered\n";
+            model.restore(NULL);
+        }
     }
 
     void sendEntity(const std::string& event, const IEntity& entity, bool includeDetails = true) {

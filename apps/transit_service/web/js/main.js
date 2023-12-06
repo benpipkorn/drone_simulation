@@ -350,6 +350,7 @@ function stopSimulation()
   api.sendCommand("stopSimulation",{test:"test"});
 }
 
+
 function toggleRoutes() {
   showRoutes = !showRoutes;
   for (var routeNum = 0; routeNum < routes.length; routeNum++) {
@@ -547,4 +548,19 @@ function onWindowResize() {
 
   // update the size of the renderer AND the canvas
   renderer.setSize( container.clientWidth, container.clientHeight );
+}
+
+function saveSim() {
+  console.log("Saving sim\n");
+  api.sendCommand("saveSimulation", {test:"test"});
+}
+
+function restoreSim() {
+  api.sendCommand("loadSimulation", {test:"test"});
+}
+
+function folderIntoList() { 
+
+  document.getElementById('SavedSimsList').options[document.getElementById('SavedSimsList').options.length] = new Option ('Test', 'Test'); // Add an item to the select list
+ 
 }

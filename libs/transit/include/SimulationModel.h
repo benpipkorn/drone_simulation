@@ -81,7 +81,7 @@ class SimulationModel {
    * @brief Restores an old simulation from a CSV file which is stored in the /saves folder
    * @param m A memento object to load the data from
   */
-  void restore(Memento& m);
+  void restore(Memento* m);
 
   /**
    * @brief Returns the graph of the map

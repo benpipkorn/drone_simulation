@@ -1,4 +1,5 @@
-#include <vector.h>
+#include <stdio.h>
+#include <vector>
 #include <string.h>
 
 class Memento {
