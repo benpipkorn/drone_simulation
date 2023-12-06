@@ -58,11 +58,14 @@ public:
             model.stop();
         }
         else if(cmd == "saveSimulation"){
+
             std::cout << "saveSim command administered\n";
             model.save();
         } else if(cmd == "loadSimulation"){
+            std::string name = data["file_name"];
+            Memento* m = new Memento(name);
             std::cout << "loadSim command administered\n";
-            model.restore(NULL);
+            model.restore(m);
         }
     }
 

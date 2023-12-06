@@ -122,9 +122,10 @@ void SimulationModel::removeFromSim(int id) {
 }
 
 void SimulationModel::save(){
-  std::cout<< "In save function in simulation" << std::endl;
+  std::cout<< "In save function in model" << std::endl;
 }
 
 void SimulationModel::restore(Memento* m){
-  std::cout<< "In load function in simulation" << std::endl;
+  std::cout<< "In load function in model" << std::endl;
+  m->loadFromCSV();
 }

@@ -1,17 +1,19 @@
 #include <stdio.h>
 #include <vector>
-#include <string.h>
+#include <string>
+#include <iostream>
+#include <IEntity.h>
 
 class Memento {
     private:
         std::vector<JsonObject*> objects;
-        const std::string& filePath;
+        std::string filePath;
     public:
         /**
          * @brief Constructor for a Memento object
          * @param filePath The filepath to the CSV file to load from
         */
-        Memento(const std::string& filePath);
+        Memento(std::string& path);
 
         /**
          * @brief Destructor for a Memento object. Deletes the objects vector

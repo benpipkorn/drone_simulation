@@ -78,7 +78,7 @@
 			<br><button onclick='stopSimulation()'>Stop Simulation</button>
 			<br><button onclick='saveSim()'>Save Simulation</button>
 			<br>
-				Load File: <input id="image-file" type="file" >
+				Load File: <input id="file-select" type="file" onchange="restoreSim()">
 				<!-- <label for="sims">Load file:</label>
 				<select name="SavedSimsList" id="SavedSimsList" onchange="restoreSim()" onclick="folderIntoList()">
 					<option>Choose...</option>

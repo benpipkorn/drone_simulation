@@ -551,12 +551,13 @@ function onWindowResize() {
 }
 
 function saveSim() {
-  console.log("Saving sim\n");
   api.sendCommand("saveSimulation", {test:"test"});
 }
 
 function restoreSim() {
-  api.sendCommand("loadSimulation", {test:"test"});
+  var file = document.getElementById("file-select").files[0]; // File is a json object
+  console.log(file); // Ctrl + Shift + J - Opens console in webpage
+  api.sendCommand("loadSimulation", {file:file, file_name: file.name}); // Sending a json object with file and file_name to transit service
 }
 
 function folderIntoList() { 
