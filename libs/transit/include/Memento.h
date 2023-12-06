@@ -2,6 +2,7 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include <fstream>
 #include <IEntity.h>
 
 class Memento {
@@ -27,7 +28,7 @@ class Memento {
          * @param entities The entities to be stored
          * @return True if storing was a success, false if an error occured
         */
-        bool collectData(std::vector<IEntity*> entities);
+        bool collectData(std::map<int, IEntity*> entities);
 
         /**
          * @brief Attemps to write data stored in the vector of JSON object pointers

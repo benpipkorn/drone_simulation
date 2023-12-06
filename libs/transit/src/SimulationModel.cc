@@ -133,8 +133,16 @@ Memento* SimulationModel::getMemento(std::string name){
   return NULL;
 }
 
-void SimulationModel::save(){
+void SimulationModel::save(){ // will need a name given for new memento
   std::cout<< "In save function in model" << std::endl;
+  std::string name = "example.csv";
+  Memento* m = new Memento(name);
+  if (m->collectData(entities)) {
+    saves.push_back(m);
+  }
+  else {
+    std::cout << "Issue saving data" << std::endl;
+  }
 }
 
 void SimulationModel::restore(Memento* m){
