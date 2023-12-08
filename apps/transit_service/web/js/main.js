@@ -561,7 +561,5 @@ function restoreSim() {
 }
 
 function folderIntoList() { 
-
   document.getElementById('SavedSimsList').options[document.getElementById('SavedSimsList').options.length] = new Option ('Test', 'Test'); // Add an item to the select list
- 
 }

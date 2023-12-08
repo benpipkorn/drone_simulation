@@ -109,6 +109,7 @@ class SimulationModel {
   const routing::IGraph* graph;
   CompositeFactory entityFactory;
   std::vector<Memento*> saves;
+  int numMementos = 0;
 };
 
 #endif
