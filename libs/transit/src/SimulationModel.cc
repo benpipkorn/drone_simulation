@@ -142,7 +142,16 @@ void SimulationModel::save(){ // will need a name given for new memento
   }
   else {
     std::cout << "Issue saving data" << std::endl;
+    return;
   }
+
+  if(m->writeToCSV()){
+    std::cout << "CSV Created\n";
+  }
+  else{
+    std::cout << "Error Creating CSV beep boop beep\n";
+  }
+
 }
 
 void SimulationModel::restore(Memento* m){
