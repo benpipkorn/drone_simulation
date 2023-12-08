@@ -2,7 +2,7 @@
 
 Memento::Memento(std::string& name){
     this->fileName = name;
-    this->filePath += this->file_name;
+    this->filePath += this->fileName;
 }
 
 Memento::~Memento() {
