@@ -8,7 +8,7 @@
 class Memento {
     private:
         std::vector<JsonObject*> objects;
-        std::string filePath;
+        std::string filePath = "./saves/";
         std::string fileName;
     public:
         /**

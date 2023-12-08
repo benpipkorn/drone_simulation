@@ -2,6 +2,7 @@
 
 Memento::Memento(std::string& name){
     this->fileName = name;
+    this->filePath += this->file_name;
 }
 
 Memento::~Memento() {
@@ -21,6 +22,12 @@ bool Memento::collectData(std::map<int, IEntity*> entities) {
 
 bool Memento::loadFromCSV(){
     std::cout << "File path in memento: " << this->filePath << std::endl;
+    std::ifstream ToSim;
+    ToSim.open(this->filePath, std::ifstream::in);
+    // while (ToSim.good()) {
+        
+    // }
+    ToSim.close();
     return true;
 }
 
