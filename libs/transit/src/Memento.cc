@@ -21,7 +21,7 @@ bool Memento::collectData(std::map<int, IEntity*> entities) {
 
 bool Memento::writeToCSV(){
     // ofstream SaveFile(this->filePath);
-    std::ofstream SaveFile("memento.csv");
+    std::ofstream SaveFile("saves/memento.csv");
 
     std::cout << this->objects.size()<<std::endl;
     for(int i=0; i < this->objects.size(); i++){
