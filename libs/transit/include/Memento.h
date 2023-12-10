@@ -3,12 +3,12 @@
 #include <string>
 #include <iostream>
 #include <fstream>
-#include <IEntity.h>
+#include "IEntity.h"
 
 class Memento {
     private:
         std::vector<const JsonObject*> objects;
-        std::string filePath = "./saves/";
+        std::string filePath = "saves/";
         std::string fileName;
     public:
         /**
@@ -28,7 +28,7 @@ class Memento {
          * @param entities The entities to be stored
          * @return True if storing was a success, false if an error occured
         */
-        bool collectData(std::map<int, IEntity*> entities);
+        bool collectData(std::map<int, IEntity*> entities, std::vector<const JsonObject*> trips);
 
         /**
          * @brief Attemps to write data stored in the vector of JSON object pointers
@@ -42,7 +42,7 @@ class Memento {
          * this Memento object
          * @return True if the loading was successful, false if an error occured
         */
-        bool loadFromCSV();
+        std::vector<const JsonObject*> loadFromCSV();
 
         /**
          * @brief Gets the path atribute from the memento

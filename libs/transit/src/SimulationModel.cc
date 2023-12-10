@@ -81,6 +81,7 @@ void SimulationModel::scheduleTrip(JsonObject& details) {
     std::string strategyName = details["search"];
     package->setStrategyName(strategyName);
     scheduledDeliveries.push_back(package);
+    // trips.push_back(&details);
     controller.sendEventToView("DeliveryScheduled", details);
   }
 }
@@ -108,12 +109,15 @@ void SimulationModel::stop(void) {
 void SimulationModel::removeFromSim(int id) {
   IEntity* entity = entities[id];
   if (entity) {
+    // auto tripsIdx = trips.begin();
     for (auto i = scheduledDeliveries.begin();
       i != scheduledDeliveries.end(); ++i) {
       if (*i == entity) {
         scheduledDeliveries.erase(i);
+        // trips.erase(tripsIdx);
         break;
       }
+      // tripsIdx++;
     }
     controller.removeEntity(*entity);
     entities.erase(id);
@@ -135,13 +139,15 @@ Memento* SimulationModel::getMemento(std::string name){
 
 void SimulationModel::save(){ // will need a name given for new memento
   std::cout<< "In save function in model" << std::endl;
-  std::string name = "save" + numMementos + ".csv";
+  std::string name = "save" + std::to_string(numMementos) + ".csv";
   Memento* m = new Memento(name);
-  if (m->collectData(entities)) {
+  numMementos++;
+  if (m->collectData(entities, trips)) {
     saves.push_back(m);
   }
   else {
     std::cout << "Issue saving data" << std::endl;
+    numMementos--;
     return;
   }
 
@@ -149,6 +155,7 @@ void SimulationModel::save(){ // will need a name given for new memento
     std::cout << "CSV Created\n";
   }
   else{
+    numMementos--;
     std::cout << "Error Creating CSV beep boop beep\n";
   }
 
@@ -160,5 +167,18 @@ void SimulationModel::restore(Memento* m){
     std::cout << "Memento not found for file\n";
     return;
   }
-  m->loadFromCSV();
+  for (auto& [id, entity] : entities) { // doing a "fresh start", getting rid of starting entities
+    removeFromSim(id);
+  }
+
+  const std::vector<const JsonObject*> entitiesToLoad = m->loadFromCSV();
+  for (auto i = entitiesToLoad.begin(); i != entitiesToLoad.end(); i++) { // adding new entities with json objects
+    JsonObject currObject = *(*i);
+    if (currObject[cmd] == "CreateEntity") {
+      createEntity(currObject);
+    }
+    else if (currObject[cmd] == "ScheduleTrip") {
+      scheduleTrip(currObject);
+    }
+  }
 }

@@ -11,31 +11,26 @@ Memento::~Memento() {
     }
 }
 
-bool Memento::collectData(std::map<int, IEntity*> entities) {
+bool Memento::collectData(std::map<int, IEntity*> entities, std::vector<const JsonObject*> trips) {
     for (auto it = entities.begin(); it != entities.end(); it++) {
         std::cout << "Memento being populated" << std::endl;
         JsonObject const *entityDetails = &(it->second->getDetails());
         this->objects.push_back(entityDetails);
     }
+    for (auto i = trips.begin(); i != trips.end(); i++) {
+        this->objects.push_back(*i);
+    }
     return true;
 }
 
 bool Memento::writeToCSV(){
-    // ofstream SaveFile(this->filePath);
-    std::ofstream SaveFile("saves/memento.csv");
-
-    std::cout << this->objects.size()<<std::endl;
+    std::ofstream SaveFile(this->filePath);
     for(int i=0; i < this->objects.size(); i++){
-        std::cout << "Entered loop" <<std::endl;
-        JsonObject const *obj = this->objects.at(i);
-        std::cout << "Before keys " <<std::endl;
-
-        std::vector<std::string> keys = obj->getKeys();
-        std::cout << "After keys" <<std::endl;
+        JsonObject const obj = *(this->objects.at(i));
+        std::vector<std::string> keys = obj.getKeys();
 
         for(int j=0;j < keys.size(); j++){
-            // SaveFile << keys.at(j) << "," << obj[keys[j]] << ",";
-            std::cout << keys.at(j) << "\n";
+            SaveFile << keys[j] << "," << obj[keys[j]] << ",";
         }
         SaveFile << "\n";
     }
@@ -44,15 +39,17 @@ bool Memento::writeToCSV(){
     return true;
 }
 
-bool Memento::loadFromCSV(){
+std::vector<const JsonObject*> Memento::loadFromCSV(){
     std::cout << "File path in memento: " << this->filePath << std::endl;
+    std::vector<const JsonObject*> entitiesToLoad;
     std::ifstream ToSim;
     ToSim.open(this->filePath, std::ifstream::in);
     // while (ToSim.good()) {
-        
+    //     create JsonObject with CSV info
+    //     entities.push_back(object);
     // }
     ToSim.close();
-    return true;
+    return entitiesToLoad;
 }
 
 std::string Memento::getName(){

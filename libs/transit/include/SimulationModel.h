@@ -104,6 +104,7 @@ class SimulationModel {
  protected:
   IController& controller;
   std::map<int, IEntity*> entities;
+  std::vector<const JsonObject*> trips;
   std::set<int> removed;
   void removeFromSim(int id);
   const routing::IGraph* graph;
