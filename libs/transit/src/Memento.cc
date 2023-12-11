@@ -2,7 +2,6 @@
 
 Memento::Memento(std::string& name){
     this->fileName = name;
-    this->filePath += this->fileName;
 }
 
 Memento::~Memento() {
@@ -24,7 +23,7 @@ bool Memento::collectData(std::map<int, IEntity*> entities, std::vector<const Js
 }
 
 bool Memento::writeToCSV(){
-    std::ofstream SaveFile(this->filePath);
+    std::ofstream SaveFile(this->fileName);
     for(int i=0; i < this->objects.size(); i++){
         JsonObject const obj = *(this->objects.at(i));
         std::vector<std::string> keys = obj.getKeys();
@@ -40,10 +39,10 @@ bool Memento::writeToCSV(){
 }
 
 std::vector<const JsonObject*> Memento::loadFromCSV(){
-    std::cout << "File path in memento: " << this->filePath << std::endl;
+    std::cout << "File path in memento: " << this->fileName << std::endl;
     std::vector<const JsonObject*> entitiesToLoad;
     std::ifstream ToSim;
-    ToSim.open(this->filePath, std::ifstream::in);
+    ToSim.open(this->fileName, std::ifstream::in);
     // while (ToSim.good()) {
     //     create JsonObject with CSV info
     //     entities.push_back(object);

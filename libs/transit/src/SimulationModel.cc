@@ -1,3 +1,5 @@
+#include <filesystem>
+
 #include "SimulationModel.h"
 
 #include "DroneFactory.h"
@@ -13,6 +15,22 @@ SimulationModel::SimulationModel(IController& controller)
   entityFactory.AddFactory(new RobotFactory());
   entityFactory.AddFactory(new HumanFactory());
   entityFactory.AddFactory(new HelicopterFactory());
+  for (auto const& dir_entry : 
+    std::filesystem::directory_iterator("saves")) {
+    std::string name = dir_entry.path().string();
+    Memento *m = nullptr;
+    if (name.compare(name.size() - 4 , 4, ".csv") == 0){
+      m = new Memento(name);
+    }
+    else {
+      std::cout << "Memento was not created, incorrect file type: " << name << std::endl;
+    }
+    if (m != nullptr) {
+      m->loadFromCSV();
+      this->saves.push_back(m);
+      std::cout << "Memento loaded" << std::endl;
+    }
+  }
 }
 
 SimulationModel::~SimulationModel() {
@@ -171,13 +189,14 @@ void SimulationModel::restore(Memento* m){
     removeFromSim(id);
   }
 
-  const std::vector<const JsonObject*> entitiesToLoad = m->loadFromCSV();
+  std::vector<const JsonObject*> entitiesToLoad = m->loadFromCSV();
   for (auto i = entitiesToLoad.begin(); i != entitiesToLoad.end(); i++) { // adding new entities with json objects
     JsonObject currObject = *(*i);
-    if (currObject[cmd] == "CreateEntity") {
+    std::string create_entity = std::string(currObject["cmd"]);
+    if (create_entity == "CreateEntity") {
       createEntity(currObject);
     }
-    else if (currObject[cmd] == "ScheduleTrip") {
+    else if (create_entity == "ScheduleTrip") {
       scheduleTrip(currObject);
     }
   }
