@@ -147,7 +147,8 @@ Memento* SimulationModel::getMemento(std::string name){
   for(int i=0; i < saves.size(); i++){
     Memento* m = saves.at(i);
     std::string path = m->getName();
-    if(path.compare(name) == 0){
+    std::string file_name = path.substr(6, path.length());
+    if(file_name.compare(name) == 0){
         // Found correct memento
         return m;
     }
@@ -156,7 +157,6 @@ Memento* SimulationModel::getMemento(std::string name){
 }
 
 void SimulationModel::save(){ // will need a name given for new memento
-  std::cout<< "In save function in model" << std::endl;
   std::string name = "save" + std::to_string(numMementos) + ".csv";
   Memento* m = new Memento(name);
   numMementos++;
@@ -185,8 +185,10 @@ void SimulationModel::restore(Memento* m){
     std::cout << "Memento not found for file\n";
     return;
   }
-  for (auto& [id, entity] : entities) { // doing a "fresh start", getting rid of starting entities
-    removeFromSim(id);
+  // doing a "fresh start", getting rid of starting entities
+  for(int i=0; i < entities.size() + 2; i++){
+    std::cout << "Removing an entity: "<< entities[i]->getName() << "\n";
+    removeFromSim(i);
   }
 
   std::vector<const JsonObject*> entitiesToLoad = m->loadFromCSV();
@@ -198,6 +200,9 @@ void SimulationModel::restore(Memento* m){
     }
     else if (create_entity == "ScheduleTrip") {
       scheduleTrip(currObject);
+    }
+    else{
+      std::cout << "Unknown cmd encountered\n";
     }
   }
 }
