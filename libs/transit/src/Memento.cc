@@ -65,9 +65,9 @@ std::vector<const JsonObject*> Memento::loadFromCSV(){
             arrayToAdd.push(toPush);
             object[objKey] = arrayToAdd;
         }
-        // else if (strcmp(objValue, std::to_string(std::stod(objValue))) == 0) // checking if string or double
+        // else if (strcmp(objValue, std::to_string(std::stod(objValue))) == 0) // checking if string or double, error here
         else { // string
-            object[objKey] = objValue;
+            object[objKey] = objValue.substr(1, objValue.size() - 2); // gets rid of "" in string
             std::cout << "Added string pair to object" << std::endl;
         }
         // getline(ToSim, newJson);
@@ -77,7 +77,7 @@ std::vector<const JsonObject*> Memento::loadFromCSV(){
         // std::cout << objValue << std::endl;
         
         // create JsonObject with CSV info
-
+        std::cout << objKey << ":" << object[objKey] << std::endl;
         this->objects.push_back(&object);
         std::cout << "Added object to list of entity objects" << std::endl;
     }
