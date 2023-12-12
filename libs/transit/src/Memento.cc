@@ -40,24 +40,36 @@ bool Memento::writeToCSV(){
 
 std::vector<const JsonObject*> Memento::loadFromCSV(){
     std::cout << "File path in memento: " << this->fileName << std::endl;
-    std::vector<const JsonObject*> entitiesToLoad;
     std::ifstream ToSim;
     ToSim.open(this->fileName, std::ifstream::in);
     JsonObject object;
     std::string objKey, objValue;
     while (ToSim.good()) {
-        objKey = "";
-        objValue = "";
+        // objKey = "";
+        // objValue = "";
         getline(ToSim, objKey, ',');
-        std::cout << objKey << ":";
+        // std::cout << objKey << ":";
         getline(ToSim, objValue, ',');
         if (objValue[0] == '[') { // array
+            JsonArray arrayToAdd;
+            std::cout << objValue.substr(1) << std::endl;
+            JsonValue toPush = std::stod(objValue.substr(1)); // ERROR HERE
+            arrayToAdd.push(toPush);
             while (objValue[objValue.size() - 1] != ']') {
-                std::cout << objValue << ",";
                 getline(ToSim, objValue, ',');
+                toPush = std::stod(objValue);
+                arrayToAdd.push(toPush);
             }
+            getline(ToSim, objValue, ']');
+            toPush = std::stod(objValue);
+            arrayToAdd.push(toPush);
+            object[objKey] = arrayToAdd;
         }
-        std::cout << objValue << std::endl;
+        // else if (strcmp(objValue, std::to_string(std::stod(objValue))) == 0) // checking if string or double
+        else { // string
+            object[objKey] = objValue;
+            std::cout << "Added string pair to object" << std::endl;
+        }
         // getline(ToSim, newJson);
         // std::cout << newJson << std::endl;
         // object = JSON.parse(newJson);
@@ -65,10 +77,12 @@ std::vector<const JsonObject*> Memento::loadFromCSV(){
         // std::cout << objValue << std::endl;
         
         // create JsonObject with CSV info
-        // entities.push_back(object);
+
+        this->objects.push_back(&object);
+        std::cout << "Added object to list of entity objects" << std::endl;
     }
     ToSim.close();
-    return entitiesToLoad;
+    return this->objects;
 }
 
 std::string Memento::getName(){
