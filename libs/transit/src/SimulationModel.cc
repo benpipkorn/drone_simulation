@@ -67,6 +67,8 @@ void SimulationModel::scheduleTrip(JsonObject& details) {
   JsonArray start = details["start"];
   JsonArray end = details["end"];
   std::cout << name << ": " << start << " --> " << end << std::endl;
+  
+  trips.push_back(&details);
 
   Robot* receiver = nullptr;
 
@@ -99,7 +101,6 @@ void SimulationModel::scheduleTrip(JsonObject& details) {
     std::string strategyName = details["search"];
     package->setStrategyName(strategyName);
     scheduledDeliveries.push_back(package);
-    // trips.push_back(&details);
     controller.sendEventToView("DeliveryScheduled", details);
   }
 }
@@ -127,15 +128,15 @@ void SimulationModel::stop(void) {
 void SimulationModel::removeFromSim(int id) {
   IEntity* entity = entities[id];
   if (entity) {
-    // auto tripsIdx = trips.begin();
+    auto tripsIdx = trips.begin();
     for (auto i = scheduledDeliveries.begin();
       i != scheduledDeliveries.end(); ++i) {
       if (*i == entity) {
         scheduledDeliveries.erase(i);
-        // trips.erase(tripsIdx);
+        trips.erase(tripsIdx);
         break;
       }
-      // tripsIdx++;
+      tripsIdx++;
     }
     controller.removeEntity(*entity);
     entities.erase(id);
@@ -157,7 +158,7 @@ Memento* SimulationModel::getMemento(std::string name){
 }
 
 void SimulationModel::save(){ // will need a name given for new memento
-  std::string name = "save" + std::to_string(numMementos) + ".csv";
+  std::string name = "saves/save" + std::to_string(numMementos) + ".csv";
   Memento* m = new Memento(name);
   numMementos++;
   if (m->collectData(entities, trips)) {

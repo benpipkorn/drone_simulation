@@ -559,7 +559,3 @@ function restoreSim() {
   console.log(file); // Ctrl + Shift + J - Opens console in webpage
   api.sendCommand("loadSimulation", {file:file, file_name: file.name}); // Sending a json object with file and file_name to transit service
 }
-
-function folderIntoList() { 
-  document.getElementById('SavedSimsList').options[document.getElementById('SavedSimsList').options.length] = new Option ('Test', 'Test'); // Add an item to the select list
-}

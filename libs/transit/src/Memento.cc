@@ -43,10 +43,30 @@ std::vector<const JsonObject*> Memento::loadFromCSV(){
     std::vector<const JsonObject*> entitiesToLoad;
     std::ifstream ToSim;
     ToSim.open(this->fileName, std::ifstream::in);
-    // while (ToSim.good()) {
-    //     create JsonObject with CSV info
-    //     entities.push_back(object);
-    // }
+    JsonObject object;
+    std::string objKey, objValue;
+    while (ToSim.good()) {
+        objKey = "";
+        objValue = "";
+        getline(ToSim, objKey, ',');
+        std::cout << objKey << ":";
+        getline(ToSim, objValue, ',');
+        if (objValue[0] == '[') { // array
+            while (objValue[objValue.size() - 1] != ']') {
+                std::cout << objValue << ",";
+                getline(ToSim, objValue, ',');
+            }
+        }
+        std::cout << objValue << std::endl;
+        // getline(ToSim, newJson);
+        // std::cout << newJson << std::endl;
+        // object = JSON.parse(newJson);
+        // entities.push_back(&object);
+        // std::cout << objValue << std::endl;
+        
+        // create JsonObject with CSV info
+        // entities.push_back(object);
+    }
     ToSim.close();
     return entitiesToLoad;
 }
