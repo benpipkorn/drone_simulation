@@ -26,11 +26,21 @@ SimulationModel::SimulationModel(IController& controller)
       std::cout << "Memento was not created, incorrect file type: " << name << std::endl;
     }
     if (m != nullptr) {
-      m->loadFromCSV();
-      this->saves.push_back(m);
-      std::cout << "Memento loaded" << std::endl;
+      if (!(m->loadFromCSV().empty())) {
+        this->saves.push_back(m);
+        std::cout << "Memento loaded" << std::endl;
+      }
+      else {
+        std::cout << "Error loading from file" << std::endl;
+      }
     }
   }
+  // std::cout << this->saves.at(0)->getName() << std::endl;
+  // Memento *test = this->saves.at(0);
+  // std::cout << "did this" << std::endl;
+  // test->writeToCSV();
+  // ^^^ this stuff throws bad_alloc
+
 }
 
 SimulationModel::~SimulationModel() {
@@ -193,17 +203,19 @@ void SimulationModel::restore(Memento* m){
   }
 
   std::vector<const JsonObject*> entitiesToLoad = m->loadFromCSV();
-  for (auto i = entitiesToLoad.begin(); i != entitiesToLoad.end(); i++) { // adding new entities with json objects
-    JsonObject currObject = *(*i);
-    std::string create_entity = std::string(currObject["cmd"]);
-    if (create_entity == "CreateEntity") {
-      createEntity(currObject);
-    }
-    else if (create_entity == "ScheduleTrip") {
-      scheduleTrip(currObject);
-    }
-    else{
-      std::cout << "Unknown cmd encountered\n";
+  if (!entitiesToLoad.empty()) {
+    for (auto i = entitiesToLoad.begin(); i != entitiesToLoad.end(); i++) { // adding new entities with json objects
+      JsonObject currObject = *(*i);
+      std::string create_entity = std::string(currObject["cmd"]);
+      if (create_entity == "CreateEntity") {
+        createEntity(currObject);
+      }
+      else if (create_entity == "ScheduleTrip") {
+        scheduleTrip(currObject);
+      }
+      else{
+        std::cout << "Unknown cmd encountered\n";
+      }
     }
   }
 }
