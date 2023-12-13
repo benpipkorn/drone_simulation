@@ -40,6 +40,7 @@ bool Memento::writeToCSV(){
 }
 
 std::vector<const JsonObject*> Memento::loadFromCSV(){
+    this->objects.clear();
     std::cout << "File path in memento: " << this->fileName << std::endl;
     std::ifstream ToSim;
     ToSim.open(this->fileName, std::ifstream::in);
@@ -49,8 +50,14 @@ std::vector<const JsonObject*> Memento::loadFromCSV(){
         // objKey = "";
         // objValue = "";
         getline(ToSim, objKey, ',');
+        if(!ToSim.good()){
+                break;
+        }
         if (objKey != "") {
             getline(ToSim, objValue, ',');
+            if(!ToSim.good()){
+                break;
+            }
             if (objValue[0] == '[') { // array
                 JsonArray arrayToAdd;
                 JsonValue toPush = std::stod(objValue.substr(1), NULL);
@@ -69,8 +76,9 @@ std::vector<const JsonObject*> Memento::loadFromCSV(){
                 }
                 catch (std::invalid_argument) {
                     if(objKey == "\ncommand"){ // Some "command" keys have a \n character in the front, didnt know if it would mess with anything but I remove it here anyways
-                        this->objects.push_back(&object); // Needs changes here. 
                         objKey = objKey.substr(1, objKey.size());
+                        std::cout << "Pushing to entities array\n" << std::endl;
+                        this->objects.push_back(&object);
                     }
                     object[objKey] = objValue.substr(1, objValue.size() - 2); // gets rid of "" in string
                 }
@@ -84,6 +92,9 @@ std::vector<const JsonObject*> Memento::loadFromCSV(){
             return empty;
         }
     }
+    std::cout << "Pushing last entity to array" << std::endl;
+    this->objects.push_back(&object);
+
     ToSim.close();
     return this->objects;
 }

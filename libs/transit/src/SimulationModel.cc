@@ -202,15 +202,33 @@ void SimulationModel::restore(Memento* m){
     removeFromSim(i);
   }
 
-  std::vector<const JsonObject*> entitiesToLoad = m->loadFromCSV();
+  std::vector< const JsonObject*> entitiesToLoad = m->loadFromCSV();
   if (!entitiesToLoad.empty()) {
-    for (auto i = entitiesToLoad.begin(); i != entitiesToLoad.end(); i++) { // adding new entities with json objects
-      JsonObject currObject = *(*i);
-      std::string create_entity = std::string(currObject["cmd"]);
-      if (create_entity == "CreateEntity") {
-        createEntity(currObject);
+    std::cout << "\nLoading " << entitiesToLoad.size() << " entities\n";
+    //for (auto i = entitiesToLoad.begin(); i != entitiesToLoad.end(); i++) { // adding new entities with json objects
+    for (int i=0; i < entitiesToLoad.size(); i++){
+      std::cout << "Dereferencing object\n";
+      JsonObject currObject = (*entitiesToLoad.at(i)); // Seg fault here
+      std::cout << "After dereferencing object\n";
+
+      JsonValue entity_val = currObject["command"];
+      JsonValue create("CreateEntity");
+      JsonValue schedule("ScheduleEntity");
+      
+      std::string entityVal = entity_val.toString();
+      std::string Create = create.toString();
+      std::string Schedule = schedule.toString();
+      
+      std::cout << "Entity: " << entityVal << std::endl;
+      std::cout << "Create: " << Create << std::endl;
+      std::cout << "Schedule: " << Schedule << std::endl;
+
+      std::cout << "Before If statement\n";
+      if (entityVal == Create) {
+        std::cout << "Creating entity" << currObject["name"] << std::endl;
+        createEntity(const_cast<JsonObject&>(currObject));
       }
-      else if (create_entity == "ScheduleTrip") {
+      else if (entityVal == Schedule) {
         scheduleTrip(currObject);
       }
       else{
