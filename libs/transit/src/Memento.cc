@@ -50,31 +50,28 @@ std::vector<const JsonObject*> Memento::loadFromCSV(){
         getline(ToSim, objKey, ',');
         // std::cout << objKey << ":";
         getline(ToSim, objValue, ',');
+        // std::cout << objKey << std::endl;
+        if(objKey == "command" || objKey == "\ncommand"){
+        }
         if (objValue[0] == '[') { // array
             JsonArray arrayToAdd;
-            std::cout << objValue.substr(1) << std::endl;
-            JsonValue toPush = std::stod(objValue.substr(1)); // ERROR HERE
+            JsonValue toPush = std::stod(objValue.substr(1), NULL);
             arrayToAdd.push(toPush);
             while (objValue[objValue.size() - 1] != ']') {
                 getline(ToSim, objValue, ',');
-                toPush = std::stod(objValue);
+                toPush = std::stod(objValue, NULL);
                 arrayToAdd.push(toPush);
             }
-            getline(ToSim, objValue, ']');
-            toPush = std::stod(objValue);
-            arrayToAdd.push(toPush);
             object[objKey] = arrayToAdd;
         }
         // else if (strcmp(objValue, std::to_string(std::stod(objValue))) == 0) // checking if string or double, error here
         else { // string
+            if(objKey == "\ncommand"){ // Some "command" keys have a \n character in the front, didnt know if it would mess with anything but I remove it here anyways
+                objKey = objKey.substr(1, objKey.size());
+            }
             object[objKey] = objValue.substr(1, objValue.size() - 2); // gets rid of "" in string
-            std::cout << "Added string pair to object" << std::endl;
+            // std::cout << "Added string pair to object" << std::endl;
         }
-        // getline(ToSim, newJson);
-        // std::cout << newJson << std::endl;
-        // object = JSON.parse(newJson);
-        // entities.push_back(&object);
-        // std::cout << objValue << std::endl;
         
         // create JsonObject with CSV info
         std::cout << objKey << ":" << object[objKey] << std::endl;
