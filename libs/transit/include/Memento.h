@@ -5,6 +5,12 @@
 #include <fstream>
 #include "IEntity.h"
 
+/**
+ * @brief Class Memento handles saving a simulation
+ * to a CSV file and loading previously saved simulations
+ * to be on standby if a user wants to load those 
+ * simulations
+*/
 class Memento {
  private:
     std::vector<const JsonObject*> objects;
