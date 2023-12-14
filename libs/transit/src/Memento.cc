@@ -1,6 +1,6 @@
 #include "Memento.h"
 
-Memento::Memento(std::string& name){
+Memento::Memento(std::string& name) {
     this->fileName = name;
 }
 
@@ -10,7 +10,8 @@ Memento::~Memento() {
     }
 }
 
-bool Memento::collectData(std::map<int, IEntity*> entities, std::vector<const JsonObject*> trips) {
+bool Memento::collectData(std::map<int, IEntity*> entities,
+    std::vector<const JsonObject*> trips) {
     for (auto it = entities.begin(); it != entities.end(); it++) {
         std::cout << "Memento being populated" << std::endl;
         JsonObject const *entityDetails = &(it->second->getDetails());
@@ -22,14 +23,14 @@ bool Memento::collectData(std::map<int, IEntity*> entities, std::vector<const Js
     return true;
 }
 
-bool Memento::writeToCSV(){
+bool Memento::writeToCSV() {
     std::ofstream SaveFile(this->fileName);
     std::cout << this->objects.size() << std::endl;
-    for(int i=0; i < this->objects.size(); i++){
+    for (int i = 0; i < this->objects.size(); i++) {
         JsonObject const obj = *(this->objects.at(i));
         std::vector<std::string> keys = obj.getKeys();
 
-        for(int j=0;j < keys.size(); j++){
+        for (int j = 0; j < keys.size(); j++) {
             SaveFile << keys[j] << "," << obj[keys[j]] << ",";
         }
         SaveFile << "\n";
@@ -39,7 +40,7 @@ bool Memento::writeToCSV(){
     return true;
 }
 
-std::vector<const JsonObject*> Memento::loadFromCSV(){
+std::vector<const JsonObject*> Memento::loadFromCSV() {
     this->objects.clear();
     std::cout << "File path in memento: " << this->fileName << std::endl;
     std::ifstream ToSim;
@@ -50,15 +51,15 @@ std::vector<const JsonObject*> Memento::loadFromCSV(){
         // objKey = "";
         // objValue = "";
         getline(ToSim, objKey, ',');
-        if(!ToSim.good()){
-                break;
+        if (!ToSim.good()) {
+            break;
         }
         if (objKey != "") {
             getline(ToSim, objValue, ',');
-            if(!ToSim.good()){
+            if (!ToSim.good()) {
                 break;
             }
-            if (objValue[0] == '[') { // array
+            if (objValue[0] == '[') {  // array
                 JsonArray arrayToAdd;
                 JsonValue toPush = std::stod(objValue.substr(1), NULL);
                 arrayToAdd.push(toPush);
@@ -68,26 +69,24 @@ std::vector<const JsonObject*> Memento::loadFromCSV(){
                     arrayToAdd.push(toPush);
                 }
                 (*object)[objKey] = arrayToAdd;
-            }
-            else {
-                try { // try parsing as number. If it is not number, it is a string
+            } else {
+                try {  // try parsing as number
                     double numToAdd = std::stod(objValue, NULL);
                     (*object)[objKey] = numToAdd;
                 }
-                catch (std::invalid_argument) {
-                    if(objKey == "\ncommand"){ // Some "command" keys have a \n character in the front, didnt know if it would mess with anything but I remove it here anyways
+                catch (std::invalid_argument) {  // string
+                    if (objKey == "\ncommand") {
                         objKey = objKey.substr(1, objKey.size());
                         std::cout << "Pushing to entities array\n" << std::endl;
                         this->objects.push_back(object);
                         object = new JsonObject();
                     }
-                    (*object)[objKey] = objValue.substr(1, objValue.size() - 2); // gets rid of "" in string
+                    (*object)[objKey] = objValue.substr(1, objValue.size() - 2);
                 }
             }
             // create JsonObject with CSV info
             std::cout << objKey << ":" << (*object)[objKey] << std::endl;
-        }
-        else {
+        } else {
             std::cout << "Found empty key before eof" << std::endl;
             this->objects.clear();
             return objects;
@@ -100,6 +99,6 @@ std::vector<const JsonObject*> Memento::loadFromCSV(){
     return this->objects;
 }
 
-std::string Memento::getName(){
+std::string Memento::getName() {
     return this->fileName;
 }
