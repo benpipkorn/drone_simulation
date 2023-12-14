@@ -89,8 +89,8 @@ std::vector<const JsonObject*> Memento::loadFromCSV(){
         }
         else {
             std::cout << "Found empty key before eof" << std::endl;
-            std::vector<const JsonObject*> empty;
-            return empty;
+            this->objects.clear();
+            return objects;
         }
     }
     std::cout << "Pushing last entity to array" << std::endl;

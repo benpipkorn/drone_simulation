@@ -35,12 +35,6 @@ SimulationModel::SimulationModel(IController& controller)
       }
     }
   }
-  // std::cout << this->saves.at(0)->getName() << std::endl;
-  // Memento *test = this->saves.at(0);
-  // std::cout << "did this" << std::endl;
-  // test->writeToCSV();
-  // ^^^ this stuff throws bad_alloc
-
 }
 
 SimulationModel::~SimulationModel() {
@@ -78,7 +72,8 @@ void SimulationModel::scheduleTrip(JsonObject& details) {
   JsonArray end = details["end"];
   std::cout << name << ": " << start << " --> " << end << std::endl;
   
-  trips.push_back(&details);
+  JsonObject* object = new JsonObject(details);
+  trips.push_back(object);
 
   Robot* receiver = nullptr;
 
@@ -211,11 +206,12 @@ void SimulationModel::restore(Memento* m){
 
       JsonValue entity_val = currObject["command"];
       JsonValue create("CreateEntity");
-      JsonValue schedule("ScheduleEntity");
+      JsonValue schedule("ScheduleTrip");
       
       std::string entityVal = entity_val.toString();
       std::string Create = create.toString();
       std::string Schedule = schedule.toString();
+
 
       if (entityVal == Create) {
         std::cout << "Creating entity " << currObject["name"] << std::endl;
@@ -223,7 +219,7 @@ void SimulationModel::restore(Memento* m){
       }
       else if (entityVal == Schedule) {
         std::cout << "Scheduling Trip" << std::endl;
-        scheduleTrip(currObject);
+        scheduleTrip(const_cast<JsonObject&>(currObject));
       }
       else{
         std::cout << "Unknown cmd encountered\n";
