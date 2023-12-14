@@ -193,7 +193,8 @@ void SimulationModel::restore(Memento* m) {
 
   std::vector< const JsonObject*> entitiesToLoad = m->loadFromCSV();
   if (!entitiesToLoad.empty()) {
-    std::cout << "Loading complete, restoring " << entitiesToLoad.size() << " objects\n";
+    std::cout << "Loading complete, restoring "
+    << entitiesToLoad.size() << " objects\n";
     for (int i = 0; i < entitiesToLoad.size(); i++) {
       JsonObject currObject = (*entitiesToLoad.at(i));
 
