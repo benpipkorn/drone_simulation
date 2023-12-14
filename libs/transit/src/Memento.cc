@@ -44,7 +44,7 @@ std::vector<const JsonObject*> Memento::loadFromCSV(){
     std::cout << "File path in memento: " << this->fileName << std::endl;
     std::ifstream ToSim;
     ToSim.open(this->fileName, std::ifstream::in);
-    JsonObject object;
+    JsonObject* object = new JsonObject();
     std::string objKey, objValue;
     while (ToSim.good()) {
         // objKey = "";
@@ -67,24 +67,25 @@ std::vector<const JsonObject*> Memento::loadFromCSV(){
                     toPush = std::stod(objValue, NULL);
                     arrayToAdd.push(toPush);
                 }
-                object[objKey] = arrayToAdd;
+                (*object)[objKey] = arrayToAdd;
             }
             else {
                 try { // try parsing as number. If it is not number, it is a string
                     double numToAdd = std::stod(objValue, NULL);
-                    object[objKey] = numToAdd;
+                    (*object)[objKey] = numToAdd;
                 }
                 catch (std::invalid_argument) {
                     if(objKey == "\ncommand"){ // Some "command" keys have a \n character in the front, didnt know if it would mess with anything but I remove it here anyways
                         objKey = objKey.substr(1, objKey.size());
                         std::cout << "Pushing to entities array\n" << std::endl;
-                        this->objects.push_back(&object);
+                        this->objects.push_back(object);
+                        object = new JsonObject();
                     }
-                    object[objKey] = objValue.substr(1, objValue.size() - 2); // gets rid of "" in string
+                    (*object)[objKey] = objValue.substr(1, objValue.size() - 2); // gets rid of "" in string
                 }
             }
             // create JsonObject with CSV info
-            std::cout << objKey << ":" << object[objKey] << std::endl;
+            std::cout << objKey << ":" << (*object)[objKey] << std::endl;
         }
         else {
             std::cout << "Found empty key before eof" << std::endl;
@@ -93,7 +94,7 @@ std::vector<const JsonObject*> Memento::loadFromCSV(){
         }
     }
     std::cout << "Pushing last entity to array" << std::endl;
-    this->objects.push_back(&object);
+    this->objects.push_back(object);
 
     ToSim.close();
     return this->objects;

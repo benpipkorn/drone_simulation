@@ -207,9 +207,7 @@ void SimulationModel::restore(Memento* m){
     std::cout << "\nLoading " << entitiesToLoad.size() << " entities\n";
     //for (auto i = entitiesToLoad.begin(); i != entitiesToLoad.end(); i++) { // adding new entities with json objects
     for (int i=0; i < entitiesToLoad.size(); i++){
-      std::cout << "Dereferencing object\n";
       JsonObject currObject = (*entitiesToLoad.at(i)); // Seg fault here
-      std::cout << "After dereferencing object\n";
 
       JsonValue entity_val = currObject["command"];
       JsonValue create("CreateEntity");
@@ -218,22 +216,19 @@ void SimulationModel::restore(Memento* m){
       std::string entityVal = entity_val.toString();
       std::string Create = create.toString();
       std::string Schedule = schedule.toString();
-      
-      std::cout << "Entity: " << entityVal << std::endl;
-      std::cout << "Create: " << Create << std::endl;
-      std::cout << "Schedule: " << Schedule << std::endl;
 
-      std::cout << "Before If statement\n";
       if (entityVal == Create) {
-        std::cout << "Creating entity" << currObject["name"] << std::endl;
+        std::cout << "Creating entity " << currObject["name"] << std::endl;
         createEntity(const_cast<JsonObject&>(currObject));
       }
       else if (entityVal == Schedule) {
+        std::cout << "Scheduling Trip" << std::endl;
         scheduleTrip(currObject);
       }
       else{
         std::cout << "Unknown cmd encountered\n";
       }
+      std::cout << "\n";
     }
   }
 }
