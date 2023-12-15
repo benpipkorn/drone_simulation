@@ -78,7 +78,9 @@ Our team organized our sprints into 2 week sprints, and divided tasks equally am
 ## Links
 
 ### Docker
+https://hub.docker.com/repository/docker/benpipkorn/drone_sim_memento/general
 
 ### Video Presentation
 
 ### UML
+https://lucid.app/lucidchart/a62b4e99-2bdd-422c-8a9b-07e132d43905/edit?invitationId=inv_3093b4d7-09dc-45a2-8ad6-c527e6b20c4e&page=0_0#
