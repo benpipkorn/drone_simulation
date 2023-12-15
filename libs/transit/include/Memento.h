@@ -19,7 +19,7 @@ class Memento {
  public:
     /**
      * @brief Constructor for a Memento object
-     * @param filePath The filepath to the CSV file to load from
+     * @param filePath The filepath to the CSV file to load from/save to
     */
     Memento(std::string& name);
 

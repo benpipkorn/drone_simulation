@@ -28,6 +28,7 @@ SimulationModel::SimulationModel(IController& controller)
     if (m != nullptr) {
       if (!(m->loadFromCSV().empty())) {
         this->saves.push_back(m);
+        numMementos++;
         std::cout << "Memento loaded" << std::endl;
       } else {
         std::cout << "Error loading from file" << std::endl;
