@@ -12,9 +12,13 @@ This project is a simulation of a drone delivery system. It combines HTML, Javas
 The simulation can be compiled and run using 2 commands in the termainal. 
 Please make sure you are in the top-most project directory when running these commands.
 The first command you should run will be a simple
-   make -j 
+   ```bash
+   make -j
+   ```
 command. This will compile the project and will put all generated files in the /build folder. The next command that you will have to run will start up the simulation itself and will not stop running until the Stop Simulation button is pressed. This command will be
+   ```bash
    ./build/bin/transit_service 8081 apps/transit_service/web/
+   ```
 The first part runs the simulation, the second part (8081) is the port that you can use to connect to the simulation on your local machine. The last part is the web application that is run with the simulation. This can be done by connecting to
 https://127.0.0.1:8081
 on your local web browser, if you are using ssh by sure to foreward the port to your local machine.
