@@ -350,6 +350,7 @@ function stopSimulation()
   api.sendCommand("stopSimulation",{test:"test"});
 }
 
+
 function toggleRoutes() {
   showRoutes = !showRoutes;
   for (var routeNum = 0; routeNum < routes.length; routeNum++) {
@@ -547,4 +548,14 @@ function onWindowResize() {
 
   // update the size of the renderer AND the canvas
   renderer.setSize( container.clientWidth, container.clientHeight );
+}
+
+function saveSim() {
+  api.sendCommand("saveSimulation", {test:"test"});
+}
+
+function restoreSim() {
+  var file = document.getElementById("file-select").files[0]; // File is a json object
+  console.log(file); // Ctrl + Shift + J - Opens console in webpage
+  api.sendCommand("loadSimulation", {file:file, file_name: file.name}); // Sending a json object with file and file_name to transit service
 }

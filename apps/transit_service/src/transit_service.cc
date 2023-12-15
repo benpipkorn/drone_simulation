@@ -57,6 +57,17 @@ public:
             std::cout << "Stop command administered\n";
             model.stop();
         }
+        else if(cmd == "saveSimulation"){
+
+            std::cout << "saveSim command administered\n";
+            model.save();
+        } else if(cmd == "loadSimulation"){
+            std::string name = data["file_name"];
+            Memento* m = NULL;
+            m = model.getMemento(name); // Gets the memento from Sim Model, return NULL if memento is not found
+            std::cout << "loadSim command administered for file: " << name << "\n";
+            model.restore(m);
+        }
     }
 
     void sendEntity(const std::string& event, const IEntity& entity, bool includeDetails = true) {

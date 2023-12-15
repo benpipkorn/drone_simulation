@@ -1,3 +1,5 @@
+#include <filesystem>
+
 #include "SimulationModel.h"
 
 #include "DroneFactory.h"
@@ -13,6 +15,26 @@ SimulationModel::SimulationModel(IController& controller)
   entityFactory.AddFactory(new RobotFactory());
   entityFactory.AddFactory(new HumanFactory());
   entityFactory.AddFactory(new HelicopterFactory());
+  for (auto const& dir_entry :
+    std::filesystem::directory_iterator("saves")) {
+    std::string name = dir_entry.path().string();
+    Memento *m = nullptr;
+    if (name.compare(name.size() - 4 , 4, ".csv") == 0) {
+      m = new Memento(name);
+    } else {
+      std::cout << "Memento was not created, incorrect file type: "
+      << name << std::endl;
+    }
+    if (m != nullptr) {
+      if (!(m->loadFromCSV().empty())) {
+        this->saves.push_back(m);
+        numMementos++;
+        std::cout << "Memento loaded" << std::endl;
+      } else {
+        std::cout << "Error loading from file" << std::endl;
+      }
+    }
+  }
 }
 
 SimulationModel::~SimulationModel() {
@@ -49,6 +71,9 @@ void SimulationModel::scheduleTrip(JsonObject& details) {
   JsonArray start = details["start"];
   JsonArray end = details["end"];
   std::cout << name << ": " << start << " --> " << end << std::endl;
+
+  JsonObject* object = new JsonObject(details);
+  trips.push_back(object);
 
   Robot* receiver = nullptr;
 
@@ -108,15 +133,90 @@ void SimulationModel::stop(void) {
 void SimulationModel::removeFromSim(int id) {
   IEntity* entity = entities[id];
   if (entity) {
+    auto tripsIdx = trips.begin();
     for (auto i = scheduledDeliveries.begin();
       i != scheduledDeliveries.end(); ++i) {
       if (*i == entity) {
         scheduledDeliveries.erase(i);
+        trips.erase(tripsIdx);
         break;
       }
+      tripsIdx++;
     }
     controller.removeEntity(*entity);
     entities.erase(id);
     delete entity;
   }
+}
+
+Memento* SimulationModel::getMemento(std::string name) {
+  for (int i=0; i < saves.size(); i++) {
+    Memento* m = saves.at(i);
+    std::string path = m->getName();
+    std::string file_name = path.substr(6, path.length());
+    if (file_name.compare(name) == 0) {
+        // Found correct memento
+        return m;
+    }
+  }
+  return NULL;
+}
+
+void SimulationModel::save() {  // will need a name given for new memento
+  std::string name = "saves/save" + std::to_string(numMementos) + ".csv";
+  Memento* m = new Memento(name);
+  numMementos++;
+  if (m->collectData(entities, trips)) {
+    saves.push_back(m);
+  } else {
+    std::cout << "Issue saving data" << std::endl;
+    numMementos--;
+    return;
+  }
+
+  if (m->writeToCSV()) {
+    std::cout << "CSV Created\n";
+  } else {
+    numMementos--;
+    std::cout << "Error Creating CSV beep boop beep\n";
+  }
+}
+
+void SimulationModel::restore(Memento* m) {
+  if (m == NULL) {
+    std::cout << "Memento not found for file\n";
+    return;
+  }
+  // doing a "fresh start", getting rid of starting entities
+  for (int i=0; i < entities.size() + 2; i++) {
+    removeFromSim(i);
+  }
+
+  std::vector< const JsonObject*> entitiesToLoad = m->loadFromCSV();
+  if (!entitiesToLoad.empty()) {
+    std::cout << "Loading complete, restoring "
+    << entitiesToLoad.size() << " objects\n";
+    for (int i = 0; i < entitiesToLoad.size(); i++) {
+      JsonObject currObject = (*entitiesToLoad.at(i));
+
+      JsonValue entity_val = currObject["command"];
+      JsonValue create("CreateEntity");
+      JsonValue schedule("ScheduleTrip");
+
+      std::string entityVal = entity_val.toString();
+      std::string Create = create.toString();
+      std::string Schedule = schedule.toString();
+
+      if (entityVal == Create) {
+        createEntity(const_cast<JsonObject&>(currObject));
+      } else if (entityVal == Schedule) {
+        std::cout << "Scheduling Trip" << std::endl;
+        scheduleTrip(const_cast<JsonObject&>(currObject));
+        std::cout << "Trip restored\n";
+      } else {
+        std::cout << "Unknown cmd encountered\n";
+      }
+    }
+  }
+  std::cout << "\nSimulation Restore Complete\n\n";
 }
