@@ -4,6 +4,9 @@
 #include "IEntity.h"
 #include "IStrategy.h"
 
+/**
+ * @brief A helicopter that flies around the simulation - has no function other than to fly around
+*/
 class Helicopter : public IEntity {
  public:
   /**

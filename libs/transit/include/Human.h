@@ -4,6 +4,9 @@
 #include "IEntity.h"
 #include "IStrategy.h"
 
+/**
+ * @brief A generated person that walks around the simulation - has no function other than walking around
+*/
 class Human : public IEntity {
  public:
   /**

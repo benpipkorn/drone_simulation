@@ -9,6 +9,9 @@
 
 class Robot;
 
+/**
+ * @brief A representation of a package to be delivered
+*/
 class Package : public IEntity {
  public:
   /**

@@ -28,7 +28,7 @@ class SimulationModel {
   SimulationModel(IController& controller);
 
   /**
-   * @brief Destructor
+   * @brief Destructor for simulation model
    */
   ~SimulationModel();
 
