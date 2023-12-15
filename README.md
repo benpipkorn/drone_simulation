@@ -74,3 +74,11 @@ In order to load a file, you must first have the save you want to load within th
 
 ## Sprint Retrospective
 Our team organized our sprints into 2 week sprints, and divided tasks equally among members. We agree that the 2 week sprints were a good idea in thought however we did not do much during the first sprint so most of the tasks from that sprint got pushed into the next one, where we essentially did the entire project in the 2nd sprint. That is one thing that we did not do well was our actual work ethic during the first sprint. One of the things that went well during both of the sprints, but primarily the second one, is the fact that we assigned tasks instead of just letting it be a free for all. This improved overall organization of the 2 sprints as no one was sitting around wondering what to do next and someone always had another task to do.
+
+## Links
+
+### Docker
+
+### Video Presentation
+
+### UML

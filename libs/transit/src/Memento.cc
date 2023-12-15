@@ -83,7 +83,6 @@ std::vector<const JsonObject*> Memento::loadFromCSV() {
                 }
             }
             // create JsonObject with CSV info
-            std::cout << objKey << ":" << (*object)[objKey] << std::endl;
         } else {
             std::cout << "Found empty key before eof" << std::endl;
             this->objects.clear();
