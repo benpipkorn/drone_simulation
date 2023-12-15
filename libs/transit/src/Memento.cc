@@ -13,30 +13,44 @@ Memento::~Memento() {
 bool Memento::collectData(std::map<int, IEntity*> entities,
     std::vector<const JsonObject*> trips) {
     std::cout << "Memento being populated" << std::endl;
-    for (auto it = entities.begin(); it != entities.end(); it++) {
-        JsonObject const *entityDetails = &(it->second->getDetails());
-        this->objects.push_back(entityDetails);
+    if (!entities.empty() && !trips.empty()) {
+        for (auto it = entities.begin(); it != entities.end(); it++) {
+            JsonObject const *entityDetails = &(it->second->getDetails());
+            this->objects.push_back(entityDetails);
+        }
+        for (auto i = trips.begin(); i != trips.end(); i++) {
+            this->objects.push_back(*i);
+        }
+        return true;
+    } else {
+        std::cout << "Error collecting data\n";
+        return false;
     }
-    for (auto i = trips.begin(); i != trips.end(); i++) {
-        this->objects.push_back(*i);
-    }
-    return true;
 }
 
 bool Memento::writeToCSV() {
-    std::ofstream SaveFile(this->fileName);
-    std::cout << "Writing to " << this->fileName << std::endl;
-    for (int i = 0; i < this->objects.size(); i++) {
-        JsonObject const obj = *(this->objects.at(i));
-        std::vector<std::string> keys = obj.getKeys();
+    if (!this->objects.empty()) {
+        std::ofstream SaveFile(this->fileName);
+        if (SaveFile.good()) {
+            std::cout << "Writing to " << this->fileName << std::endl;
+            for (int i = 0; i < this->objects.size(); i++) {
+                JsonObject const obj = *(this->objects.at(i));
+                std::vector<std::string> keys = obj.getKeys();
 
-        for (int j = 0; j < keys.size(); j++) {
-            SaveFile << keys[j] << "," << obj[keys[j]] << ",";
+                for (int j = 0; j < keys.size(); j++) {
+                    SaveFile << keys[j] << "," << obj[keys[j]] << ",";
+                }
+                SaveFile << "\n";
+            }
+        } else {
+            std::cout << "Error opening file\n";
+            return false;
         }
-        SaveFile << "\n";
+        SaveFile.close();
+    } else {
+        std::cout << "Error, empty object list\n";
+        return false;
     }
-    SaveFile.close();
-
     return true;
 }
 
