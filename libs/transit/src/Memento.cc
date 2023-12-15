@@ -13,7 +13,7 @@ Memento::~Memento() {
 bool Memento::collectData(std::map<int, IEntity*> entities,
     std::vector<const JsonObject*> trips) {
     std::cout << "Memento being populated" << std::endl;
-    if (!entities.empty() && !trips.empty()) {
+    if (!entities.empty()) {
         for (auto it = entities.begin(); it != entities.end(); it++) {
             JsonObject const *entityDetails = &(it->second->getDetails());
             this->objects.push_back(entityDetails);
